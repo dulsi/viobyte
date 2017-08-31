@@ -16,6 +16,8 @@
 
 #define STATE_TITLESCREEN 0
 #define STATE_GAME 1
+#define STATE_DIEING 2
+#define STATE_GAMEOVER 3
 
 TinyScreen display = TinyScreen(0);
 
@@ -323,7 +325,7 @@ static Sprite s_Ghost4 = {5,5, s_Ghost4Data};
 SpriteInst sprites[5];
 
 int score = 0;
-int lives = 0;
+int lives = 1;
 int RX=0;
 int RY=0;
 int LX=0;
@@ -430,13 +432,20 @@ void titlescreen()
     count = 0;
     avgrefresh = 0;
     lastTime = millis();
+    lives = 3;
   }
 }
 
-void loop() {
+void loop()
+{
   // put your main code here, to run repeatedly:
   updateJoystick();
   if (state == STATE_TITLESCREEN)
+  {
+    titlescreen();
+    return;
+  }
+  else if (state == STATE_GAMEOVER)
   {
     titlescreen();
     return;
@@ -460,97 +469,109 @@ void loop() {
   int yWhere = (sprites[VIOBYTE_PLAYER1].y - s_tileMap.yPixOffset) / 5;
   int yReal = sprites[VIOBYTE_PLAYER1].y - s_tileMap.yPixOffset;
   int xReal = sprites[VIOBYTE_PLAYER1].x - s_tileMap.xPixOffset;
-  if (LX > 100){
-    sprites[VIOBYTE_PLAYER1].flip=true;
-    if ((xReal != 0) && ((yReal % 5) == 0))
+  if (state == STATE_DIEING)
+  {
+    if (s_Viobyte.height > 1)
     {
-      if ((xReal % 5) == 0)
+     s_Viobyte.height--;
+    }
+  }
+  else
+  {
+    if (LX > 100)
+    {
+      sprites[VIOBYTE_PLAYER1].flip=true;
+      if ((xReal != 0) && ((yReal % 5) == 0))
       {
-        if (s_tileMap.tilemap[yWhere * s_tileMap.xWidth + xWhere - 1] == 0)
+        if ((xReal % 5) == 0)
+        {
+          if (s_tileMap.tilemap[yWhere * s_tileMap.xWidth + xWhere - 1] == 0)
+          {
+            sprites[VIOBYTE_PLAYER1].x--;
+            xReal--;
+            xWhere--;
+          }
+        }
+        else
         {
           sprites[VIOBYTE_PLAYER1].x--;
           xReal--;
-          xWhere--;
         }
       }
-      else
-      {
-        sprites[VIOBYTE_PLAYER1].x--;
-        xReal--;
-      }
     }
-  }
-  else if (LX < -100){
-    sprites[VIOBYTE_PLAYER1].flip=false;
-    if ((xReal != 90) && ((yReal % 5) == 0))
+    else if (LX < -100)
     {
-      if ((xReal % 5) == 0)
+      sprites[VIOBYTE_PLAYER1].flip=false;
+      if ((xReal != 90) && ((yReal % 5) == 0))
       {
-        if (s_tileMap.tilemap[yWhere * s_tileMap.xWidth + xWhere + 1] == 0)
+        if ((xReal % 5) == 0)
+        {
+          if (s_tileMap.tilemap[yWhere * s_tileMap.xWidth + xWhere + 1] == 0)
+          {
+            sprites[VIOBYTE_PLAYER1].x++;
+            xReal++;
+          }
+        }
+        else
         {
           sprites[VIOBYTE_PLAYER1].x++;
           xReal++;
+          if ((xReal % 5) == 0)
+            xWhere++;
         }
       }
-      else
-      {
-        sprites[VIOBYTE_PLAYER1].x++;
-        xReal++;
-        if ((xReal % 5) == 0)
-          xWhere++;
-      }
     }
-  }
-  if (currentDots[yWhere * s_tileMap.xWidth + xWhere] == false)
-  {
-    currentDots[yWhere * s_tileMap.xWidth + xWhere] = true;
-    score++;
-  }
-  if (LY < -100)
-  {
-    if ((yReal != 55) && ((xReal % 5) == 0))
+    if (currentDots[yWhere * s_tileMap.xWidth + xWhere] == false)
     {
-      if ((yReal % 5) == 0)
+      currentDots[yWhere * s_tileMap.xWidth + xWhere] = true;
+      score++;
+    }
+    if (LY < -100)
+    {
+      if ((yReal != 55) && ((xReal % 5) == 0))
       {
-        if (s_tileMap.tilemap[(yWhere + 1) * s_tileMap.xWidth + xWhere] == 0)
+        if ((yReal % 5) == 0)
+        {
+          if (s_tileMap.tilemap[(yWhere + 1) * s_tileMap.xWidth + xWhere] == 0)
+          {
+            sprites[VIOBYTE_PLAYER1].y++;
+            yReal++;
+          }
+        }
+        else
         {
           sprites[VIOBYTE_PLAYER1].y++;
           yReal++;
+          if ((yReal % 5) == 0)
+            yWhere++;
         }
       }
-      else
-      {
-        sprites[VIOBYTE_PLAYER1].y++;
-        yReal++;
-        if ((yReal % 5) == 0)
-          yWhere++;
-      }
     }
-  }
-  else if (LY > 100)
-  {
-    if ((yReal != 0) && ((xReal % 5) == 0))
+    else if (LY > 100)
     {
-      if ((yReal % 5) == 0)
+      if ((yReal != 0) && ((xReal % 5) == 0))
       {
-        if (s_tileMap.tilemap[(yWhere - 1) * s_tileMap.xWidth + xWhere] == 0)
+        if ((yReal % 5) == 0)
+        {
+          if (s_tileMap.tilemap[(yWhere - 1) * s_tileMap.xWidth + xWhere] == 0)
+          {
+            sprites[VIOBYTE_PLAYER1].y--;
+            yReal--;
+            yWhere--;
+          }
+        }
+        else
         {
           sprites[VIOBYTE_PLAYER1].y--;
           yReal--;
-          yWhere--;
         }
       }
-      else
-      {
-        sprites[VIOBYTE_PLAYER1].y--;
-        yReal--;
-      }
     }
-  }
-  if (currentDots[yWhere * s_tileMap.xWidth + xWhere] == false)
-  {
-    currentDots[yWhere * s_tileMap.xWidth + xWhere] = true;
-    score++;
+    if (currentDots[yWhere * s_tileMap.xWidth + xWhere] == false)
+    {
+      currentDots[yWhere * s_tileMap.xWidth + xWhere] = true;
+      score++;
+    }
   }
   for (int i = VIOBYTE_GHOST1; i <= VIOBYTE_GHOST4; i++)
   {
@@ -635,7 +656,41 @@ void loop() {
       }
     }
   }
+  if (state != STATE_DIEING)
+  {
+    for (int index = VIOBYTE_GHOST1; index <= VIOBYTE_GHOST4; ++index)
+    {
+      if(sprites[index].enabled)
+      {
+        const Sprite* spriteType = sprites[index].sprite;
+        if (((sprites[index].y <= sprites[VIOBYTE_PLAYER1].y) && (sprites[index].y + 5 > sprites[VIOBYTE_PLAYER1].y)) ||
+          ((sprites[VIOBYTE_PLAYER1].y <= sprites[index].y) && (sprites[VIOBYTE_PLAYER1].y + 5 > sprites[index].y)))
+        {
+          if (((sprites[index].x <= sprites[VIOBYTE_PLAYER1].x) && (sprites[index].x + 5 > sprites[VIOBYTE_PLAYER1].x)) ||
+            ((sprites[VIOBYTE_PLAYER1].x <= sprites[index].x) && (sprites[VIOBYTE_PLAYER1].x + 5 > sprites[index].x)))
+          {
+            lives--;
+            state = STATE_DIEING;
+          }
+        }
+      }
+    }
+  }
   drawSprites(sprites,5,&s_tileMap,0x00,&display,&drawDots);
+  if (s_Viobyte.height == 1)
+  {
+    s_Viobyte.height = 5;
+    if (lives == 0)
+    {
+      state = STATE_GAMEOVER;
+    }
+    else
+    {
+      sprites[VIOBYTE_PLAYER1].x = startX + s_tileMap.xPixOffset;
+      sprites[VIOBYTE_PLAYER1].y = startY + s_tileMap.yPixOffset;
+      state = STATE_GAME;
+    }
+  }
   unsigned long oldTime = lastTime;
   lastTime = millis();
   refresh += lastTime - oldTime;
