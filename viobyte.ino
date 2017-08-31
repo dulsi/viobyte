@@ -316,6 +316,8 @@ DGREE,ALPHA,DGREE,ALPHA,DGREE
 };
 static Sprite s_Ghost4 = {5,5, s_Ghost4Data};
 
+static Sprite s_GameOver = {87,10, _image_game_over_data};
+
 #define VIOBYTE_PLAYER1 4
 #define VIOBYTE_GHOST1 0
 #define VIOBYTE_GHOST2 1
@@ -332,6 +334,8 @@ int LX=0;
 int LY=0;
 byte leftButton=0;
 byte rightButton=0;
+byte leftButtonPrev=0;
+byte rightButtonPrev=0;
 int ghostLeaving=VIOBYTE_GHOST1;
 unsigned long lastTime;
 byte dir[4] = {1, 3, 1, 3};
@@ -340,11 +344,8 @@ int refresh = 0;
 int count = 0;
 int avgrefresh = 0;
 
-void setup() {
-
-  Wire.begin();
-  Serial.begin(9600);
-  display.begin();
+void reset()
+{
   memcpy_P(currentDots, dots, sizeof(dots));
 
   sprites[VIOBYTE_PLAYER1].sprite = &s_Viobyte;
@@ -372,6 +373,15 @@ void setup() {
   sprites[VIOBYTE_GHOST4].y = ghostY + s_tileMap.yPixOffset;
   sprites[VIOBYTE_GHOST4].enabled = true;
   sprites[VIOBYTE_GHOST4].flip = false;
+}
+
+void setup()
+{
+
+  Wire.begin();
+  Serial.begin(9600);
+  display.begin();
+  reset();
   lastTime = millis();
 }
 
@@ -383,6 +393,8 @@ void updateJoystick(){
   }
   byte lsb=Wire.read();
   byte buttons=~Wire.read();
+  leftButtonPrev = leftButton;
+  rightButtonPrev = rightButton;
   leftButton=buttons&4;
   rightButton=buttons&8;
   for(int i=0;i<4;i++){
@@ -425,14 +437,30 @@ void titlescreen()
     display.writeBuffer(lineBuffer,96);
   }
   display.endTransfer();
-  if (leftButton || rightButton)
+  if ((leftButton && !leftButtonPrev) || (rightButton && !rightButtonPrev))
   {
     state = STATE_GAME;
     refresh = 0;
     count = 0;
     avgrefresh = 0;
     lastTime = millis();
+    reset();
+    score = 0;
     lives = 3;
+  }
+}
+
+void game_over()
+{
+  sprites[0].sprite = &s_GameOver;
+  sprites[0].x = 4;
+  sprites[0].y = 28;
+  sprites[0].enabled = true;
+  sprites[0].flip = false;
+  drawSprites(sprites,1,NULL,0x00,&display,NULL);
+  if ((leftButton && !leftButtonPrev) || (rightButton && !rightButtonPrev))
+  {
+    state = STATE_TITLESCREEN;
   }
 }
 
@@ -447,7 +475,7 @@ void loop()
   }
   else if (state == STATE_GAMEOVER)
   {
-    titlescreen();
+    game_over();
     return;
   }
   if (RX > 100)
@@ -671,6 +699,7 @@ void loop()
           {
             lives--;
             state = STATE_DIEING;
+            break;
           }
         }
       }
