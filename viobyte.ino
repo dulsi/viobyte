@@ -266,9 +266,6 @@ const int PROGMEM startY = 7 * 5;
 const int PROGMEM ghostX = 9 * 5;
 const int PROGMEM ghostY = 3 * 5;
 
-const uint8_t PROGMEM s_DotData[] PROGMEM {YELLO };
-
-static Sprite s_Dot = {1,1, s_DotData};
 static bool currentDots[228];
 
 const uint8_t PROGMEM s_ViobyteData[] {
@@ -419,7 +416,7 @@ void updateJoystick(){
 
 void drawDots(const TileMap5pix *tilemap, int line, uint8_t lineBuffer[96])
 {
-  if (line < tilemap->yPixOffset)
+  if (line < 4)
   {
     for (int i = 1; i < lives; ++i)
     {
@@ -451,14 +448,17 @@ void drawDots(const TileMap5pix *tilemap, int line, uint8_t lineBuffer[96])
     }
     while (remainScore != 0);
   }
-  if ((line - tilemap->yPixOffset) % 5 == 2)
+  if (state != STATE_GAMEOVER)
   {
-    int yWhere = (line - tilemap->yPixOffset) / 5;
-    for (int i = 0; i < tilemap->xWidth; i++)
+    if ((line - tilemap->yPixOffset) % 5 == 2)
     {
-      if (!currentDots[yWhere * tilemap->xWidth + i])
+      int yWhere = (line - tilemap->yPixOffset) / 5;
+      for (int i = 0; i < tilemap->xWidth; i++)
       {
-        lineBuffer[i * 5 + 2 + tilemap->xPixOffset] = YELLO;
+        if (!currentDots[yWhere * tilemap->xWidth + i])
+        {
+          lineBuffer[i * 5 + 2 + tilemap->xPixOffset] = YELLO;
+        }
       }
     }
   }
@@ -496,7 +496,7 @@ void game_over()
   sprites[0].y = 28;
   sprites[0].enabled = true;
   sprites[0].flip = false;
-  drawSprites(sprites,1,NULL,0x00,&display,NULL);
+  drawSprites(sprites,1,NULL,0x00,&display,&drawDots);
   if ((leftButton && !leftButtonPrev) || (rightButton && !rightButtonPrev))
   {
     state = STATE_TITLESCREEN;
