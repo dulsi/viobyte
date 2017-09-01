@@ -280,6 +280,13 @@ ALPHA,VIOLE,VIOLE,VIOLE,ALPHA
 };
 static Sprite s_Viobyte = {5,5, s_ViobyteData};
 
+const uint8_t PROGMEM s_ViobyteLife[] {
+ALPHA,VIOLE,VIOLE,ALPHA,
+VIOLE,VIOLE,  RED,VIOLE,
+VIOLE,VIOLE,VIOLE,VIOLE,
+ALPHA,VIOLE,VIOLE,ALPHA
+};
+
 const uint8_t PROGMEM s_Ghost1Data[] {
 ALPHA,  RED,  RED,  RED,ALPHA,
   RED,WHITE,YELLO,YELLO,  RED,
@@ -412,6 +419,38 @@ void updateJoystick(){
 
 void drawDots(const TileMap5pix *tilemap, int line, uint8_t lineBuffer[96])
 {
+  if (line < tilemap->yPixOffset)
+  {
+    for (int i = 1; i < lives; ++i)
+    {
+      for (int x = 0; x < 4; ++x)
+      {
+        uint8_t col = pgm_read_byte_near(s_ViobyteLife + (line * 4) + x);
+        if ( col != ALPHA )
+        {
+          lineBuffer[x + (i * 5)] = col;
+        }
+      }
+    }
+    int curNumber = score % 10;
+    int remainScore = score;
+    int start = 90 - 4;
+    do
+    {
+      for (int x = 0; x < 4; ++x)
+      {
+        uint8_t col = pgm_read_byte_near(_image_numbers_data + (curNumber * 4 * 4) + (line * 4) + x);
+        if ( col != ALPHA )
+        {
+          lineBuffer[start + x] = col;
+        }
+      }
+      start -= 5;
+      remainScore = remainScore / 10;
+      curNumber = remainScore % 10;
+    }
+    while (remainScore != 0);
+  }
   if ((line - tilemap->yPixOffset) % 5 == 2)
   {
     int yWhere = (line - tilemap->yPixOffset) / 5;
