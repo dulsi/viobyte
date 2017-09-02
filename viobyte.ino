@@ -348,6 +348,7 @@ static Sprite s_GameOver = {87,10, _image_game_over_data};
 SpriteInst sprites[5];
 
 int score = 0;
+int dotsLeft = 0;
 int lives = 1;
 int RX=0;
 int RY=0;
@@ -367,7 +368,13 @@ int avgrefresh = 0;
 
 void reset()
 {
-  memcpy_P(currentDots, dots, sizeof(dots));
+  memcpy_P(currentDots, currentMap->dots, sizeof(currentDots));
+  dotsLeft = 0;
+  for (int i = 0; i < 228; i++)
+  {
+    if (!currentDots[i])
+      dotsLeft++;
+  }
 
   sprites[VIOBYTE_PLAYER1].sprite = &s_Viobyte;
   sprites[VIOBYTE_PLAYER1].x = currentMap->startX + currentMap->tileMap->xPixOffset;
@@ -676,6 +683,7 @@ void loop()
     {
       currentDots[yWhere * currentMap->tileMap->xWidth + xWhere] = true;
       score++;
+      dotsLeft--;
     }
     if (LY < -100)
     {
@@ -722,6 +730,7 @@ void loop()
     {
       currentDots[yWhere * currentMap->tileMap->xWidth + xWhere] = true;
       score++;
+      dotsLeft--;
     }
   }
   for (int i = VIOBYTE_GHOST1; i <= VIOBYTE_GHOST4; i++)
@@ -863,6 +872,10 @@ void loop()
   if ((lastTime > oldTime) && (lastTime - oldTime < 61))
   {
     delay(61 - (lastTime - oldTime));
+  }
+  if (dotsLeft == 0)
+  {
+    reset();
   }
 }
 
