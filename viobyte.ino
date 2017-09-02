@@ -261,12 +261,29 @@ false,  true,  true,  true,  true,  true,  true,  true, false,  true, false,  tr
 false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
 };
 
-const int PROGMEM startX = 9 * 5;
-const int PROGMEM startY = 7 * 5;
-const int PROGMEM ghostX = 9 * 5;
-const int PROGMEM ghostY = 3 * 5;
+struct Tunnel
+{
+  int posX;
+  int posY;
+  int desX;
+  int desY;
+};
+
+struct LevelMap
+{
+  int startX;
+  int startY;
+  int ghostX;
+  int ghostY;
+  TileMap5pix  *tileMap;
+  const bool *dots;
+  Tunnel tunnel[2];
+};
+
+const LevelMap PROGMEM map1 = { 9*5, 7*5, 9*5, 3*5, &s_tileMap, dots, {{-4, 6 * 5, 18 * 5 + 4, 6 * 5}, {18 * 5 + 4, 6 * 5, 0, 6 * 5}}  };
 
 static bool currentDots[228];
+const LevelMap *currentMap = &map1;
 
 const uint8_t PROGMEM s_ViobyteData[] {
 ALPHA,VIOLE,VIOLE,VIOLE,ALPHA,
@@ -353,28 +370,28 @@ void reset()
   memcpy_P(currentDots, dots, sizeof(dots));
 
   sprites[VIOBYTE_PLAYER1].sprite = &s_Viobyte;
-  sprites[VIOBYTE_PLAYER1].x = startX + s_tileMap.xPixOffset;
-  sprites[VIOBYTE_PLAYER1].y = startY + s_tileMap.yPixOffset;
+  sprites[VIOBYTE_PLAYER1].x = currentMap->startX + currentMap->tileMap->xPixOffset;
+  sprites[VIOBYTE_PLAYER1].y = currentMap->startY + currentMap->tileMap->yPixOffset;
   sprites[VIOBYTE_PLAYER1].enabled = true;
   sprites[VIOBYTE_PLAYER1].flip = false;
   sprites[VIOBYTE_GHOST1].sprite = &s_Ghost1;
-  sprites[VIOBYTE_GHOST1].x = ghostX + s_tileMap.xPixOffset;
-  sprites[VIOBYTE_GHOST1].y = ghostY + s_tileMap.yPixOffset;
+  sprites[VIOBYTE_GHOST1].x = currentMap->ghostX + currentMap->tileMap->xPixOffset;
+  sprites[VIOBYTE_GHOST1].y = currentMap->ghostY + currentMap->tileMap->yPixOffset;
   sprites[VIOBYTE_GHOST1].enabled = true;
   sprites[VIOBYTE_GHOST1].flip = false;
   sprites[VIOBYTE_GHOST2].sprite = &s_Ghost2;
-  sprites[VIOBYTE_GHOST2].x = ghostX + s_tileMap.xPixOffset;
-  sprites[VIOBYTE_GHOST2].y = ghostY + s_tileMap.yPixOffset;
+  sprites[VIOBYTE_GHOST2].x = currentMap->ghostX + currentMap->tileMap->xPixOffset;
+  sprites[VIOBYTE_GHOST2].y = currentMap->ghostY + currentMap->tileMap->yPixOffset;
   sprites[VIOBYTE_GHOST2].enabled = true;
   sprites[VIOBYTE_GHOST2].flip = false;
   sprites[VIOBYTE_GHOST3].sprite = &s_Ghost3;
-  sprites[VIOBYTE_GHOST3].x = ghostX + s_tileMap.xPixOffset;
-  sprites[VIOBYTE_GHOST3].y = ghostY + s_tileMap.yPixOffset;
+  sprites[VIOBYTE_GHOST3].x = currentMap->ghostX + currentMap->tileMap->xPixOffset;
+  sprites[VIOBYTE_GHOST3].y = currentMap->ghostY + currentMap->tileMap->yPixOffset;
   sprites[VIOBYTE_GHOST3].enabled = true;
   sprites[VIOBYTE_GHOST3].flip = false;
   sprites[VIOBYTE_GHOST4].sprite = &s_Ghost4;
-  sprites[VIOBYTE_GHOST4].x = ghostX + s_tileMap.xPixOffset;
-  sprites[VIOBYTE_GHOST4].y = ghostY + s_tileMap.yPixOffset;
+  sprites[VIOBYTE_GHOST4].x = currentMap->ghostX + currentMap->tileMap->xPixOffset;
+  sprites[VIOBYTE_GHOST4].y = currentMap->ghostY + currentMap->tileMap->yPixOffset;
   sprites[VIOBYTE_GHOST4].enabled = true;
   sprites[VIOBYTE_GHOST4].flip = false;
 }
@@ -486,6 +503,7 @@ void titlescreen()
     reset();
     score = 0;
     lives = 3;
+    currentMap = &map1;
   }
 }
 
@@ -532,15 +550,15 @@ void loop()
       }
     }
   }
-  int xWhere = (sprites[VIOBYTE_PLAYER1].x - s_tileMap.xPixOffset) / 5;
-  int yWhere = (sprites[VIOBYTE_PLAYER1].y - s_tileMap.yPixOffset) / 5;
-  int yReal = sprites[VIOBYTE_PLAYER1].y - s_tileMap.yPixOffset;
-  int xReal = sprites[VIOBYTE_PLAYER1].x - s_tileMap.xPixOffset;
+  int xWhere = (sprites[VIOBYTE_PLAYER1].x - currentMap->tileMap->xPixOffset) / 5;
+  int yWhere = (sprites[VIOBYTE_PLAYER1].y - currentMap->tileMap->yPixOffset) / 5;
+  int yReal = sprites[VIOBYTE_PLAYER1].y - currentMap->tileMap->yPixOffset;
+  int xReal = sprites[VIOBYTE_PLAYER1].x - currentMap->tileMap->xPixOffset;
   if (state == STATE_DIEING)
   {
     if (s_Viobyte.height > 1)
     {
-     s_Viobyte.height--;
+      s_Viobyte.height--;
     }
   }
   else
@@ -548,11 +566,11 @@ void loop()
     if (LX > 100)
     {
       sprites[VIOBYTE_PLAYER1].flip=true;
-      if ((xReal != 0) && ((yReal % 5) == 0))
+      if ((xReal > 0) && ((yReal % 5) == 0))
       {
         if ((xReal % 5) == 0)
         {
-          if (s_tileMap.tilemap[yWhere * s_tileMap.xWidth + xWhere - 1] == 0)
+          if (currentMap->tileMap->tilemap[yWhere * currentMap->tileMap->xWidth + xWhere - 1] == 0)
           {
             sprites[VIOBYTE_PLAYER1].x--;
             xReal--;
@@ -565,15 +583,48 @@ void loop()
           xReal--;
         }
       }
+      else if (xReal == 0)
+      {
+        for (int i = 0; i < 2; ++i)
+        {
+          if ((xReal == currentMap->tunnel[i].posX + 4) && (yReal == currentMap->tunnel[i].posY))
+          {
+            sprites[VIOBYTE_PLAYER1].x--;
+            xReal--;
+            xWhere--;
+          }
+        }
+      }
+      else if (xReal == -4)
+      {
+        for (int i = 0; i < 2; ++i)
+        {
+          if ((xReal == currentMap->tunnel[i].posX) && (yReal == currentMap->tunnel[i].posY))
+          {
+            sprites[VIOBYTE_PLAYER1].x = currentMap->tunnel[i].desX + currentMap->tileMap->xPixOffset;
+            sprites[VIOBYTE_PLAYER1].y = currentMap->tunnel[i].desY + currentMap->tileMap->yPixOffset;
+            xWhere = (sprites[VIOBYTE_PLAYER1].x - currentMap->tileMap->xPixOffset) / 5;
+            yWhere = (sprites[VIOBYTE_PLAYER1].y - currentMap->tileMap->yPixOffset) / 5;
+            yReal = sprites[VIOBYTE_PLAYER1].y - currentMap->tileMap->yPixOffset;
+            xReal = sprites[VIOBYTE_PLAYER1].x - currentMap->tileMap->xPixOffset;
+            break;
+          }
+        }
+      }
+      else if (xReal < 0)
+      {
+        xReal--;
+        sprites[VIOBYTE_PLAYER1].x--;
+      }
     }
     else if (LX < -100)
     {
       sprites[VIOBYTE_PLAYER1].flip=false;
-      if ((xReal != 90) && ((yReal % 5) == 0))
+      if ((xReal < 90) && ((yReal % 5) == 0))
       {
         if ((xReal % 5) == 0)
         {
-          if (s_tileMap.tilemap[yWhere * s_tileMap.xWidth + xWhere + 1] == 0)
+          if (currentMap->tileMap->tilemap[yWhere * currentMap->tileMap->xWidth + xWhere + 1] == 0)
           {
             sprites[VIOBYTE_PLAYER1].x++;
             xReal++;
@@ -587,10 +638,43 @@ void loop()
             xWhere++;
         }
       }
+      else if (xReal == 90)
+      {
+        for (int i = 0; i < 2; ++i)
+        {
+          if ((xReal == currentMap->tunnel[i].posX - 4) && (yReal == currentMap->tunnel[i].posY))
+          {
+            sprites[VIOBYTE_PLAYER1].x++;
+            xReal++;
+            xWhere++;
+          }
+        }
+      }
+      else if (xReal == 94)
+      {
+        for (int i = 0; i < 2; ++i)
+        {
+          if ((xReal == currentMap->tunnel[i].posX) && (yReal == currentMap->tunnel[i].posY))
+          {
+            sprites[VIOBYTE_PLAYER1].x = currentMap->tunnel[i].desX + currentMap->tileMap->xPixOffset;
+            sprites[VIOBYTE_PLAYER1].y = currentMap->tunnel[i].desY + currentMap->tileMap->yPixOffset;
+            xWhere = (sprites[VIOBYTE_PLAYER1].x - currentMap->tileMap->xPixOffset) / 5;
+            yWhere = (sprites[VIOBYTE_PLAYER1].y - currentMap->tileMap->yPixOffset) / 5;
+            yReal = sprites[VIOBYTE_PLAYER1].y - currentMap->tileMap->yPixOffset;
+            xReal = sprites[VIOBYTE_PLAYER1].x - currentMap->tileMap->xPixOffset;
+            break;
+          }
+        }
+      }
+      else if (xReal > 90)
+      {
+        sprites[VIOBYTE_PLAYER1].x++;
+        xReal++;
+      }
     }
-    if (currentDots[yWhere * s_tileMap.xWidth + xWhere] == false)
+    if (currentDots[yWhere * currentMap->tileMap->xWidth + xWhere] == false)
     {
-      currentDots[yWhere * s_tileMap.xWidth + xWhere] = true;
+      currentDots[yWhere * currentMap->tileMap->xWidth + xWhere] = true;
       score++;
     }
     if (LY < -100)
@@ -599,7 +683,7 @@ void loop()
       {
         if ((yReal % 5) == 0)
         {
-          if (s_tileMap.tilemap[(yWhere + 1) * s_tileMap.xWidth + xWhere] == 0)
+          if (currentMap->tileMap->tilemap[(yWhere + 1) * currentMap->tileMap->xWidth + xWhere] == 0)
           {
             sprites[VIOBYTE_PLAYER1].y++;
             yReal++;
@@ -620,7 +704,7 @@ void loop()
       {
         if ((yReal % 5) == 0)
         {
-          if (s_tileMap.tilemap[(yWhere - 1) * s_tileMap.xWidth + xWhere] == 0)
+          if (currentMap->tileMap->tilemap[(yWhere - 1) * currentMap->tileMap->xWidth + xWhere] == 0)
           {
             sprites[VIOBYTE_PLAYER1].y--;
             yReal--;
@@ -634,9 +718,9 @@ void loop()
         }
       }
     }
-    if (currentDots[yWhere * s_tileMap.xWidth + xWhere] == false)
+    if (currentDots[yWhere * currentMap->tileMap->xWidth + xWhere] == false)
     {
-      currentDots[yWhere * s_tileMap.xWidth + xWhere] = true;
+      currentDots[yWhere * currentMap->tileMap->xWidth + xWhere] = true;
       score++;
     }
   }
@@ -645,10 +729,10 @@ void loop()
     if (ghostLeaving == i)
     {
       sprites[i].y--;
-      if (sprites[i].y == ghostY - 5 + s_tileMap.yPixOffset)
+      if (sprites[i].y == currentMap->ghostY - 5 + currentMap->tileMap->yPixOffset)
         ghostLeaving = VIOBYTE_PLAYER1;
     }
-    else if ((sprites[i].x == ghostX + s_tileMap.xPixOffset) && (sprites[i].y == ghostY + s_tileMap.yPixOffset))
+    else if ((sprites[i].x == currentMap->ghostX + currentMap->tileMap->xPixOffset) && (sprites[i].y == currentMap->ghostY + currentMap->tileMap->yPixOffset))
     {
       if (ghostLeaving == VIOBYTE_PLAYER1)
       {
@@ -657,31 +741,31 @@ void loop()
     }
     else
     {
-      yReal = sprites[i].y - s_tileMap.yPixOffset;
-      xReal = sprites[i].x - s_tileMap.xPixOffset;
+      yReal = sprites[i].y - currentMap->tileMap->yPixOffset;
+      xReal = sprites[i].x - currentMap->tileMap->xPixOffset;
       if (((xReal % 5) == 0) && ((yReal % 5) == 0))
       {
-        xWhere = (sprites[i].x - s_tileMap.xPixOffset) / 5;
-        yWhere = (sprites[i].y - s_tileMap.yPixOffset) / 5;
+        xWhere = (sprites[i].x - currentMap->tileMap->xPixOffset) / 5;
+        yWhere = (sprites[i].y - currentMap->tileMap->yPixOffset) / 5;
         byte possible = 0x0F;
         byte options = 3;
         possible = possible & (~(1 << ((dir[i] + 2) % 4)));
-        if ((possible & 0x08) && ((xWhere == 0) || (s_tileMap.tilemap[yWhere * s_tileMap.xWidth + xWhere - 1] != 0)))
+        if ((possible & 0x08) && ((xWhere == 0) || (currentMap->tileMap->tilemap[yWhere * currentMap->tileMap->xWidth + xWhere - 1] != 0)))
         {
           possible &= 0x07;
           options--;
         }
-        if ((possible & 0x02) && ((xWhere == (s_tileMap.xWidth - 1)) || (s_tileMap.tilemap[yWhere * s_tileMap.xWidth + xWhere + 1] != 0)))
+        if ((possible & 0x02) && ((xWhere == (currentMap->tileMap->xWidth - 1)) || (currentMap->tileMap->tilemap[yWhere * currentMap->tileMap->xWidth + xWhere + 1] != 0)))
         {
           possible &= 0x0D;
           options--;
         }
-        if ((possible & 0x01) && ((yWhere == 0) || (s_tileMap.tilemap[(yWhere - 1) * s_tileMap.xWidth + xWhere] != 0)))
+        if ((possible & 0x01) && ((yWhere == 0) || (currentMap->tileMap->tilemap[(yWhere - 1) * currentMap->tileMap->xWidth + xWhere] != 0)))
         {
           possible &= 0x0E;
           options--;
         }
-        if ((possible & 0x04) && ((yWhere == (s_tileMap.yHeight - 1)) || (s_tileMap.tilemap[(yWhere + 1) * s_tileMap.xWidth + xWhere] != 0)))
+        if ((possible & 0x04) && ((yWhere == (currentMap->tileMap->yHeight - 1)) || (currentMap->tileMap->tilemap[(yWhere + 1) * currentMap->tileMap->xWidth + xWhere] != 0)))
         {
           possible &= 0x0B;
           options--;
@@ -744,7 +828,7 @@ void loop()
       }
     }
   }
-  drawSprites(sprites,5,&s_tileMap,0x00,&display,&drawDots);
+  drawSprites(sprites,5,currentMap->tileMap,0x00,&display,&drawDots);
   if (s_Viobyte.height == 1)
   {
     s_Viobyte.height = 5;
@@ -754,8 +838,8 @@ void loop()
     }
     else
     {
-      sprites[VIOBYTE_PLAYER1].x = startX + s_tileMap.xPixOffset;
-      sprites[VIOBYTE_PLAYER1].y = startY + s_tileMap.yPixOffset;
+      sprites[VIOBYTE_PLAYER1].x = currentMap->startX + currentMap->tileMap->xPixOffset;
+      sprites[VIOBYTE_PLAYER1].y = currentMap->startY + currentMap->tileMap->yPixOffset;
       state = STATE_GAME;
     }
   }
