@@ -229,38 +229,6 @@ BLACK,BLACK,BLACK,BLACK, BLUE,
 static Sprite s_BO = {5,5, s_BlueWall23Data};
 
 
-static TileMap5pix s_tileMap = { 
-  19,12,1,4, new const Sprite*[228]
-{
-    0,     0,     0,     0,     0,     0,     0,     0,     0, &s_B5,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-    0, &s_B3, &s_B4,     0, &s_B3, &s_B2, &s_B2, &s_B4,     0, &s_B6,     0, &s_B3, &s_B2, &s_B2, &s_B4,     0, &s_B3, &s_B4,     0,
-    0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-    0, &s_B3, &s_B4,     0, &s_B7, &s_B8,     0, &s_B3, &s_B2, &s_BN, &s_B2, &s_B4,     0, &s_B7, &s_B8,     0, &s_B3, &s_B4,     0,
-    0,     0,     0,     0, &s_BF, &s_BE,     0,     0,     0, &s_B6,     0,     0,     0, &s_BF, &s_BE,     0,     0,     0,     0,
-&s_B2, &s_B2, &s_B4,     0, &s_BF, &s_BG, &s_B2, &s_B4,     0,     0,     0, &s_B3, &s_B2, &s_BH, &s_BE,     0, &s_B3, &s_B2, &s_B2,
-    0,     0,     0,     0, &s_BF, &s_BE,     0,     0,     0, &s_B1,     0,     0,     0, &s_BF, &s_BE,     0,     0,     0,     0,
-&s_B9, &s_B9, &s_B8,     0, &s_BB, &s_BA,     0, &s_BI,     0,     0,     0, &s_BI,     0, &s_BB, &s_BA,     0, &s_B7, &s_B9, &s_B9,
-&s_BD, &s_BD, &s_BA,     0,     0,     0,     0, &s_BC, &s_B2, &s_BM, &s_B2, &s_BO,     0,     0,     0,     0, &s_BB, &s_BD, &s_BD,
-    0,     0,     0,     0, &s_B7, &s_B8,     0,     0,     0, &s_B5,     0,     0,     0, &s_B7, &s_B8,     0,     0,     0,     0,
-    0, &s_B3, &s_B2, &s_B2, &s_BJ, &s_BK, &s_B2, &s_B4,     0, &s_B6,     0, &s_B3, &s_B2, &s_BJ, &s_BK, &s_B2, &s_B2, &s_B4,     0,
-    0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0
-}};
-
-const bool PROGMEM dots[228] = {
-false, false, false, false, false, false, false, false, false,  true, false, false, false, false, false, false, false, false, false,
-false,  true,  true, false,  true,  true,  true,  true, false,  true, false,  true,  true,  true,  true, false,  true,  true, false,
-false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-false,  true,  true, false,  true,  true, false,  true,  true,  true,  true,  true, false,  true,  true, false,  true,  true, false,
-false, false, false, false,  true,  true, false, false, false,  true, false, false, false,  true,  true, false, false, false, false,
- true,  true,  true, false,  true,  true,  true,  true, false, false, false,  true,  true,  true,  true, false,  true,  true,  true,
- true,  true,  true, false,  true,  true, false, false, false,  true, false, false, false,  true,  true, false,  true,  true,  true,
- true,  true,  true, false,  true,  true, false,  true, false,  true, false,  true, false,  true,  true, false,  true,  true,  true,
- true,  true,  true, false, false, false, false,  true,  true,  true,  true,  true, false, false, false, false,  true,  true,  true,
-false, false, false, false,  true,  true, false, false, false,  true, false, false, false,  true,  true, false, false, false, false,
-false,  true,  true,  true,  true,  true,  true,  true, false,  true, false,  true,  true,  true,  true,  true,  true,  true, false,
-false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
-};
-
 struct Tunnel
 {
   int posX;
@@ -280,7 +248,39 @@ struct LevelMap
   Tunnel tunnel[2];
 };
 
-const LevelMap PROGMEM map1 = { 9*5, 7*5, 9*5, 3*5, &s_tileMap, dots, {{-4, 6 * 5, 18 * 5 + 4, 6 * 5}, {18 * 5 + 4, 6 * 5, 0, 6 * 5}}  };
+static TileMap5pix s_tileMap1 = {
+  19,12,1,4, new const Sprite*[228]
+{
+    0,     0,     0,     0,     0,     0,     0,     0,     0, &s_B5,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+    0, &s_B3, &s_B4,     0, &s_B3, &s_B2, &s_B2, &s_B4,     0, &s_B6,     0, &s_B3, &s_B2, &s_B2, &s_B4,     0, &s_B3, &s_B4,     0,
+    0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+    0, &s_B3, &s_B4,     0, &s_B7, &s_B8,     0, &s_B3, &s_B2, &s_BN, &s_B2, &s_B4,     0, &s_B7, &s_B8,     0, &s_B3, &s_B4,     0,
+    0,     0,     0,     0, &s_BF, &s_BE,     0,     0,     0, &s_B6,     0,     0,     0, &s_BF, &s_BE,     0,     0,     0,     0,
+&s_B2, &s_B2, &s_B4,     0, &s_BF, &s_BG, &s_B2, &s_B4,     0,     0,     0, &s_B3, &s_B2, &s_BH, &s_BE,     0, &s_B3, &s_B2, &s_B2,
+    0,     0,     0,     0, &s_BF, &s_BE,     0,     0,     0, &s_B1,     0,     0,     0, &s_BF, &s_BE,     0,     0,     0,     0,
+&s_B9, &s_B9, &s_B8,     0, &s_BB, &s_BA,     0, &s_BI,     0,     0,     0, &s_BI,     0, &s_BB, &s_BA,     0, &s_B7, &s_B9, &s_B9,
+&s_BD, &s_BD, &s_BA,     0,     0,     0,     0, &s_BC, &s_B2, &s_BM, &s_B2, &s_BO,     0,     0,     0,     0, &s_BB, &s_BD, &s_BD,
+    0,     0,     0,     0, &s_B7, &s_B8,     0,     0,     0, &s_B5,     0,     0,     0, &s_B7, &s_B8,     0,     0,     0,     0,
+    0, &s_B3, &s_B2, &s_B2, &s_BJ, &s_BK, &s_B2, &s_B4,     0, &s_B6,     0, &s_B3, &s_B2, &s_BJ, &s_BK, &s_B2, &s_B2, &s_B4,     0,
+    0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0
+}};
+
+const bool PROGMEM dots1[228] = {
+false, false, false, false, false, false, false, false, false,  true, false, false, false, false, false, false, false, false, false,
+false,  true,  true, false,  true,  true,  true,  true, false,  true, false,  true,  true,  true,  true, false,  true,  true, false,
+false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+false,  true,  true, false,  true,  true, false,  true,  true,  true,  true,  true, false,  true,  true, false,  true,  true, false,
+false, false, false, false,  true,  true, false, false, false,  true, false, false, false,  true,  true, false, false, false, false,
+ true,  true,  true, false,  true,  true,  true,  true, false, false, false,  true,  true,  true,  true, false,  true,  true,  true,
+ true,  true,  true, false,  true,  true, false, false, false,  true, false, false, false,  true,  true, false,  true,  true,  true,
+ true,  true,  true, false,  true,  true, false,  true, false,  true, false,  true, false,  true,  true, false,  true,  true,  true,
+ true,  true,  true, false, false, false, false,  true,  true,  true,  true,  true, false, false, false, false,  true,  true,  true,
+false, false, false, false,  true,  true, false, false, false,  true, false, false, false,  true,  true, false, false, false, false,
+false,  true,  true,  true,  true,  true,  true,  true, false,  true, false,  true,  true,  true,  true,  true,  true,  true, false,
+false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+};
+
+const LevelMap PROGMEM map1 = { 9*5, 7*5, 9*5, 3*5, &s_tileMap1, dots1, {{-4, 6 * 5, 18 * 5 + 4, 6 * 5}, {0, 0, 0, 0}}  };
 
 static bool currentDots[228];
 const LevelMap *currentMap = &map1;
@@ -649,7 +649,7 @@ void loop()
       {
         for (int i = 0; i < 2; ++i)
         {
-          if ((xReal == currentMap->tunnel[i].posX - 4) && (yReal == currentMap->tunnel[i].posY))
+          if ((xReal == currentMap->tunnel[i].desX - 4) && (yReal == currentMap->tunnel[i].desY))
           {
             sprites[VIOBYTE_PLAYER1].x++;
             xReal++;
@@ -661,10 +661,10 @@ void loop()
       {
         for (int i = 0; i < 2; ++i)
         {
-          if ((xReal == currentMap->tunnel[i].posX) && (yReal == currentMap->tunnel[i].posY))
+          if ((xReal == currentMap->tunnel[i].desX) && (yReal == currentMap->tunnel[i].desY))
           {
-            sprites[VIOBYTE_PLAYER1].x = currentMap->tunnel[i].desX + currentMap->tileMap->xPixOffset;
-            sprites[VIOBYTE_PLAYER1].y = currentMap->tunnel[i].desY + currentMap->tileMap->yPixOffset;
+            sprites[VIOBYTE_PLAYER1].x = currentMap->tunnel[i].posX + currentMap->tileMap->xPixOffset;
+            sprites[VIOBYTE_PLAYER1].y = currentMap->tunnel[i].posY + currentMap->tileMap->yPixOffset;
             xWhere = (sprites[VIOBYTE_PLAYER1].x - currentMap->tileMap->xPixOffset) / 5;
             yWhere = (sprites[VIOBYTE_PLAYER1].y - currentMap->tileMap->yPixOffset) / 5;
             yReal = sprites[VIOBYTE_PLAYER1].y - currentMap->tileMap->yPixOffset;
