@@ -24,10 +24,10 @@ class SpriteInst
 class TileMap5pix
 {
   public:
-  int xWidth;
-  int yHeight;
-  int xPixOffset;
-  int yPixOffset;
+  int16_t xWidth;
+  int16_t yHeight;
+  int16_t xPixOffset;
+  int16_t yPixOffset;
   const Sprite** tilemap;
   
 };
