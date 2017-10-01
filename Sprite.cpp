@@ -11,7 +11,6 @@ void drawSprites(SpriteInst* sprites, int numSprites, const TileMap5pix *tilemap
   
   uint8_t lineBuffer[96];
 
-  
   for(int lines = 0; lines < 64; ++lines)
   {
     if (( tilemap == 0 ) || (lines < tilemap->yPixOffset))

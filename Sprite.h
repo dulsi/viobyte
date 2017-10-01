@@ -28,7 +28,7 @@ class TileMap5pix
   int16_t yHeight;
   int16_t xPixOffset;
   int16_t yPixOffset;
-  const Sprite** tilemap;
+  Sprite** tilemap;
   
 };
 
