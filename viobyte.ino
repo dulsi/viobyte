@@ -455,7 +455,6 @@ void reset()
   }
   memcpy_P(tileSpriteMap, pgm_read_ptr(&((pLevelMap)pgm_read_ptr(&maps[currentMap]))->tileMap), sizeof(tileSpriteMap));
   memcpy_P(tunnel, ((pLevelMap)pgm_read_ptr(&maps[currentMap])), sizeof(tunnel));
-//  memcpy_P(tunnel, pgm_read_ptr(&((pLevelMap)pgm_read_ptr(&maps[currentMap]))->tunnel), sizeof(tunnel));
 
   ghostX = pgm_read_word(&((pLevelMap)pgm_read_ptr(&maps[currentMap]))->ghostX);
   ghostY = pgm_read_word(&((pLevelMap)pgm_read_ptr(&maps[currentMap]))->ghostY);
