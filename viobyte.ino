@@ -920,8 +920,6 @@ void loop()
       }
     }
   }
-  if (maps[0]->startX != pgm_read_word(&((pLevelMap)pgm_read_ptr(&maps[currentMap]))->startX))
-    score++;
   drawSprites(sprites,5,&s_tileMap,0x00,&display,&drawDots);
   if (s_Viobyte.height == 1)
   {
