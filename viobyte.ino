@@ -422,13 +422,20 @@ static Sprite s_GameOver = {87,10, _image_game_over_data};
 
 SpriteInst sprites[5];
 
+const uint8_t PROGMEM TAJoystickUp  = 1 << 0;       //Mask
+const uint8_t PROGMEM TAJoystickDown = 1 << 1;      //Mask
+const uint8_t PROGMEM TAJoystickLeft  = 1 << 2;     //Mask
+const uint8_t PROGMEM TAJoystickRight = 1 << 3;     //Mask
+const uint8_t PROGMEM TAJoystick2Up  = 1 << 4;       //Mask
+const uint8_t PROGMEM TAJoystick2Down = 1 << 5;      //Mask
+const uint8_t PROGMEM TAJoystick2Left  = 1 << 6;     //Mask
+const uint8_t PROGMEM TAJoystick2Right = 1 << 7;     //Mask
+
 int score = 0;
 int dotsLeft = 0;
 int lives = 1;
-int RX=0;
-int RY=0;
-int LX=0;
-int LY=0;
+uint8_t joyDir = 0;
+uint8_t curDir = TAJoystickUp;
 byte leftButton=0;
 byte rightButton=0;
 byte leftButtonPrev=0;
@@ -513,10 +520,43 @@ void updateJoystick(){
     data[i]|= ((lsb>>(i*2))&3);
     data[i]-=511;
   }
-  RX=data[0];
-  RY=data[1];
-  LX=data[2];
-  LY=data[3];
+  int RX=data[0];
+  int RY=data[1];
+  int LX=data[2];
+  int LY=data[3];
+  joyDir = 0;
+  if (LX > 100)
+  {
+    joyDir |= TAJoystickLeft;
+  }
+  else if (LX < -100)
+  {
+    joyDir |= TAJoystickRight;
+  }
+  if (LY > 100)
+  {
+    joyDir |= TAJoystickUp;
+  }
+  else if (LY < -100)
+  {
+    joyDir |= TAJoystickDown;
+  }
+  if (RX > 100)
+  {
+    joyDir |= TAJoystick2Left;
+  }
+  else if (RX < -100)
+  {
+    joyDir |= TAJoystick2Right;
+  }
+  if (RY > 100)
+  {
+    joyDir |= TAJoystick2Up;
+  }
+  else if (RY < -100)
+  {
+    joyDir |= TAJoystick2Down;
+  }
   randomSeed(analogRead(0));
 }
 
@@ -624,7 +664,7 @@ void loop()
     game_over();
     return;
   }
-  if (RX > 100)
+  if (joyDir & TAJoystick2Up)
   {
     state = STATE_GAMEOVER;
     if (count > 0)
@@ -653,7 +693,61 @@ void loop()
   }
   else
   {
-    if (LX > 100)
+    if ((joyDir & TAJoystickUp) && (curDir == TAJoystickDown))
+      curDir = TAJoystickUp;
+    else if ((joyDir & TAJoystickDown) && (curDir == TAJoystickUp))
+      curDir = TAJoystickDown;
+    else if ((joyDir & TAJoystickLeft) && (curDir == TAJoystickRight))
+      curDir = TAJoystickLeft;
+    else if ((joyDir & TAJoystickRight) && (curDir == TAJoystickLeft))
+      curDir = TAJoystickRight;
+    if  ((curDir == TAJoystickDown) || (curDir == TAJoystickUp))
+    {
+      if (joyDir & TAJoystickLeft)
+      {
+        if ((xReal > 0) && ((xReal % 5) == 0) && ((yReal % 5) == 0))
+        {
+          if (s_tileMap.tilemap[yWhere * s_tileMap.xWidth + xWhere - 1] == 0)
+          {
+            curDir = TAJoystickLeft;
+          }
+        }
+      }
+      if (joyDir & TAJoystickRight)
+      {
+        if ((xReal < 90) && ((xReal % 5) == 0) && ((yReal % 5) == 0))
+        {
+          if (s_tileMap.tilemap[yWhere * s_tileMap.xWidth + xWhere + 1] == 0)
+          {
+            curDir = TAJoystickRight;
+          }
+        }
+      }
+    }
+    else if ((curDir == TAJoystickRight) || (curDir == TAJoystickLeft))
+    {
+      if (joyDir & TAJoystickDown)
+      {
+        if ((yReal != 55) && ((yReal % 5) == 0) && ((xReal % 5) == 0))
+        {
+          if (s_tileMap.tilemap[(yWhere + 1) * s_tileMap.xWidth + xWhere] == 0)
+          {
+            curDir = TAJoystickDown;
+          }
+        }
+      }
+      if (joyDir & TAJoystickUp)
+      {
+        if ((yReal != 0) && ((yReal % 5) == 0) && ((xReal % 5) == 0))
+        {
+          if (s_tileMap.tilemap[(yWhere - 1) * s_tileMap.xWidth + xWhere] == 0)
+          {
+            curDir = TAJoystickUp;
+          }
+        }
+      }
+    }
+    if (curDir == TAJoystickLeft)
     {
       sprites[VIOBYTE_PLAYER1].flip=true;
       if ((xReal > 0) && ((yReal % 5) == 0))
@@ -707,7 +801,7 @@ void loop()
         sprites[VIOBYTE_PLAYER1].x--;
       }
     }
-    else if (LX < -100)
+    else if (curDir == TAJoystickRight)
     {
       sprites[VIOBYTE_PLAYER1].flip=false;
       if ((xReal < 90) && ((yReal % 5) == 0))
@@ -768,7 +862,7 @@ void loop()
       score++;
       dotsLeft--;
     }
-    if (LY < -100)
+    if (curDir == TAJoystickDown)
     {
       if ((yReal != 55) && ((xReal % 5) == 0))
       {
@@ -789,7 +883,7 @@ void loop()
         }
       }
     }
-    else if (LY > 100)
+    else if (curDir == TAJoystickUp)
     {
       if ((yReal != 0) && ((xReal % 5) == 0))
       {
