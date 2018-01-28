@@ -1,6 +1,7 @@
 #include <TinyScreen.h>
 #include <SPI.h>
 #include <Wire.h>
+#include "TinyConfig.h"
 
 #include "Sprite.h"
 

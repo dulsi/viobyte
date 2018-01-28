@@ -1,8 +1,16 @@
 #include <TinyScreen.h>
 #include <SPI.h>
 #include <Wire.h>
+#include "TinyConfig.h"
 #include "Sprite.h"
 #include "viobytetitle.h"
+
+#ifdef TINYARCADE_CONFIG
+#include "TinyArcade.h"
+#endif
+#ifdef TINYSCREEN_GAMEKIT_CONFIG
+#include "TinyGameKit.h"
+#endif
 
 #define  BLACK           0x00
 #define BLUE            0xE0
@@ -19,7 +27,7 @@
 #define STATE_DIEING 2
 #define STATE_GAMEOVER 3
 
-TinyScreen display = TinyScreen(0);
+TinyScreen display = TinyScreen(TINYSCREEN_TYPE);
 
 const uint8_t PROGMEM s_BlueWall1Data[] {
  BLUE, BLUE, BLUE, BLUE, BLUE,
@@ -422,15 +430,6 @@ static Sprite s_GameOver = {87,10, _image_game_over_data};
 
 SpriteInst sprites[5];
 
-const uint8_t PROGMEM TAJoystickUp  = 1 << 0;       //Mask
-const uint8_t PROGMEM TAJoystickDown = 1 << 1;      //Mask
-const uint8_t PROGMEM TAJoystickLeft  = 1 << 2;     //Mask
-const uint8_t PROGMEM TAJoystickRight = 1 << 3;     //Mask
-const uint8_t PROGMEM TAJoystick2Up  = 1 << 4;       //Mask
-const uint8_t PROGMEM TAJoystick2Down = 1 << 5;      //Mask
-const uint8_t PROGMEM TAJoystick2Left  = 1 << 6;     //Mask
-const uint8_t PROGMEM TAJoystick2Right = 1 << 7;     //Mask
-
 int score = 0;
 int dotsLeft = 0;
 int lives = 1;
@@ -494,69 +493,28 @@ void reset()
 
 void setup()
 {
-
-  Wire.begin();
-  Serial.begin(9600);
+  arcadeInit();
   display.begin();
+  display.setBitDepth(TSBitDepth8);
+  display.setBrightness(15);
+  display.setFlip(false);
+
+#ifdef TINYARCADE_CONFIG
+  USBDevice.init();
+  USBDevice.attach();
+#endif
+  SerialUSB.begin(9600);
   reset();
   lastTime = millis();
 }
 
 void updateJoystick(){
-  Wire.requestFrom(0x22,6);
-  int data[4];
-  for(int i=0;i<4;i++){
-    data[i]=Wire.read();
-  }
-  byte lsb=Wire.read();
-  byte buttons=~Wire.read();
+  uint8_t btn = checkButton(TAButton1 | TAButton2);
+  joyDir = checkJoystick(TAJoystickUp | TAJoystickDown | TAJoystickLeft | TAJoystickRight);
   leftButtonPrev = leftButton;
   rightButtonPrev = rightButton;
-  leftButton=buttons&4;
-  rightButton=buttons&8;
-  for(int i=0;i<4;i++){
-    
-    data[i]<<=2;
-    data[i]|= ((lsb>>(i*2))&3);
-    data[i]-=511;
-  }
-  int RX=data[0];
-  int RY=data[1];
-  int LX=data[2];
-  int LY=data[3];
-  joyDir = 0;
-  if (LX > 100)
-  {
-    joyDir |= TAJoystickLeft;
-  }
-  else if (LX < -100)
-  {
-    joyDir |= TAJoystickRight;
-  }
-  if (LY > 100)
-  {
-    joyDir |= TAJoystickUp;
-  }
-  else if (LY < -100)
-  {
-    joyDir |= TAJoystickDown;
-  }
-  if (RX > 100)
-  {
-    joyDir |= TAJoystick2Left;
-  }
-  else if (RX < -100)
-  {
-    joyDir |= TAJoystick2Right;
-  }
-  if (RY > 100)
-  {
-    joyDir |= TAJoystick2Up;
-  }
-  else if (RY < -100)
-  {
-    joyDir |= TAJoystick2Down;
-  }
+  leftButton=btn & TAButton1;
+  rightButton=btn & TAButton2;
   randomSeed(analogRead(0));
 }
 

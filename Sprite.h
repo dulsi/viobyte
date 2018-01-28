@@ -1,5 +1,4 @@
 #pragma once
-#include <avr/pgmspace.h>
 
 #define ALPHA 0xBA
 
