@@ -1004,9 +1004,9 @@ void loop()
     refresh = 0;
     count = 0;
   }
-  if ((lastTime > oldTime) && (lastTime - oldTime < 61))
+  if ((lastTime > oldTime) && (lastTime - oldTime < 70))
   {
-    delay(61 - (lastTime - oldTime));
+    delay(70 - (lastTime - oldTime));
   }
   if (dotsLeft == 0)
   {
