@@ -450,18 +450,8 @@ uint16_t ghostX;
 uint16_t ghostY;
 Tunnel tunnel[2];
 
-void reset()
+void resetPlayerGhosts()
 {
-  memcpy_P(currentDots, pgm_read_ptr(&((pLevelMap)pgm_read_ptr(&maps[currentMap]))->dots), sizeof(currentDots));
-  dotsLeft = 0;
-  for (int i = 0; i < 228; i++)
-  {
-    if (!currentDots[i])
-      dotsLeft++;
-  }
-  memcpy_P(tileSpriteMap, pgm_read_ptr(&((pLevelMap)pgm_read_ptr(&maps[currentMap]))->tileMap), sizeof(tileSpriteMap));
-  memcpy_P(tunnel, ((pLevelMap)pgm_read_ptr(&maps[currentMap])), sizeof(tunnel));
-
   ghostX = pgm_read_word(&((pLevelMap)pgm_read_ptr(&maps[currentMap]))->ghostX);
   ghostY = pgm_read_word(&((pLevelMap)pgm_read_ptr(&maps[currentMap]))->ghostY);
   sprites[VIOBYTE_PLAYER1].sprite = &s_Viobyte;
@@ -489,6 +479,20 @@ void reset()
   sprites[VIOBYTE_GHOST4].y = ghostY + s_tileMap.yPixOffset;
   sprites[VIOBYTE_GHOST4].enabled = true;
   sprites[VIOBYTE_GHOST4].flip = false;
+}
+
+void reset()
+{
+  memcpy_P(currentDots, pgm_read_ptr(&((pLevelMap)pgm_read_ptr(&maps[currentMap]))->dots), sizeof(currentDots));
+  dotsLeft = 0;
+  for (int i = 0; i < 228; i++)
+  {
+    if (!currentDots[i])
+      dotsLeft++;
+  }
+  memcpy_P(tileSpriteMap, pgm_read_ptr(&((pLevelMap)pgm_read_ptr(&maps[currentMap]))->tileMap), sizeof(tileSpriteMap));
+  memcpy_P(tunnel, ((pLevelMap)pgm_read_ptr(&maps[currentMap])), sizeof(tunnel));
+  resetPlayerGhosts();
 }
 
 void setup()
@@ -982,8 +986,7 @@ void loop()
     }
     else
     {
-      sprites[VIOBYTE_PLAYER1].x = pgm_read_word(&((pLevelMap)pgm_read_ptr(&maps[currentMap]))->startX) + s_tileMap.xPixOffset;
-      sprites[VIOBYTE_PLAYER1].y = pgm_read_word(&((pLevelMap)pgm_read_ptr(&maps[currentMap]))->startY) + s_tileMap.yPixOffset;
+      resetPlayerGhosts();
       state = STATE_GAME;
     }
   }
