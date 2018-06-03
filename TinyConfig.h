@@ -1,8 +1,12 @@
 #ifndef TINYCONFIG_H
 #define TINYCONFIG_H
 
+#ifndef TINYSCREENSIM
 //#define TINYARCADE_CONFIG
 #define TINYSCREEN_GAMEKIT_CONFIG
+#else
+#define TINYSCREEN_GAMEKIT_CONFIG
+#endif
 
 #ifdef TINYARCADE_CONFIG
 #define pgm_read_ptr(x) (*(x))

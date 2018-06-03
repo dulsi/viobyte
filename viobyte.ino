@@ -27,6 +27,9 @@
 #define STATE_DIEING 2
 #define STATE_GAMEOVER 3
 
+#define VIOBYTESTATE_NORMAL 0
+#define VIOBYTESTATE_PHASING 1
+
 TinyScreen display = TinyScreen(TINYSCREEN_TYPE);
 
 const uint8_t PROGMEM s_BlueWall1Data[] {
@@ -281,6 +284,13 @@ struct Tunnel
   int desY;
 };
 
+struct Star
+{
+  int x;
+  int y;
+  int type;
+};
+
 typedef const Sprite *spriteMap;
 
 struct LevelMap
@@ -292,6 +302,7 @@ struct LevelMap
   uint16_t ghostY;
   const spriteMap *tileMap;
   const bool *dots;
+  Star star[4];
 };
 
 typedef const LevelMap *pLevelMap;
@@ -313,7 +324,7 @@ const spriteMap PROGMEM spriteMap1[228] =
 };
 
 const bool PROGMEM dots1[228] = {
-false, false, false, false, false, false, false, false, false,  true, false, false, false, false, false, false, false, false, false,
+ true, false, false, false, false, false, false, false, false,  true, false, false, false, false, false, false, false, false,  true,
 false,  true,  true, false,  true,  true,  true,  true, false,  true, false,  true,  true,  true,  true, false,  true,  true, false,
 false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
 false,  true,  true, false,  true,  true, false,  true,  true,  true,  true,  true, false,  true,  true, false,  true,  true, false,
@@ -324,10 +335,10 @@ false, false, false, false,  true,  true, false, false, false,  true, false, fal
  true,  true,  true, false, false, false, false,  true,  true,  true,  true,  true, false, false, false, false,  true,  true,  true,
 false, false, false, false,  true,  true, false, false, false,  true, false, false, false,  true,  true, false, false, false, false,
 false,  true,  true,  true,  true,  true,  true,  true, false,  true, false,  true,  true,  true,  true,  true,  true,  true, false,
-false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+ true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,  true
 };
 
-const LevelMap PROGMEM map1 = { {{-4, 6 * 5, 18 * 5 + 4, 6 * 5}, {0, 0, 0, 0}}, 9*5, 7*5, 9*5, 3*5, spriteMap1, dots1 };
+const LevelMap PROGMEM map1 = { {{-4, 6 * 5, 18 * 5 + 4, 6 * 5}, {0, 0, 0, 0}}, 9*5, 7*5, 9*5, 3*5, spriteMap1, dots1, {{0, 0, VIOBYTESTATE_PHASING}, {0, 11, VIOBYTESTATE_PHASING}, {18, 0, VIOBYTESTATE_PHASING}, {18, 11, VIOBYTESTATE_PHASING}} };
 
 const spriteMap PROGMEM spriteMap2[228]
 {
@@ -347,7 +358,7 @@ const spriteMap PROGMEM spriteMap2[228]
 
 const bool PROGMEM dots2[228] = {
 false, false, false,  true, false, false, false, false, false, false, false, false, false, false, false,  true, false, false, false,
-false,  true, false, false, false,  true,  true, false,  true,  true,  true, false,  true,  true, false, false, false,  true, false,
+ true,  true, false, false, false,  true,  true, false,  true,  true,  true, false,  true,  true, false, false, false,  true,  true,
 false,  true, false,  true,  true, false, false, false, false, false, false, false, false, false,  true,  true, false,  true, false,
 false, false, false, false, false, false,  true,  true, false,  true, false,  true,  true, false, false, false, false, false, false,
  true, false,  true,  true,  true, false,  true, false, false, false, false, false,  true, false,  true, false,  true,  true,  true,
@@ -356,13 +367,14 @@ false, false, false, false, false, false,  true,  true, false,  true, false,  tr
  true,  true,  true, false,  true,  true,  true,  true, false,  true,  true, false,  true, false, false, false, false, false, false,
  true,  true,  true, false,  true, false, false, false, false, false, false, false,  true,  true,  true,  true, false,  true, false,
 false, false, false, false, false, false,  true,  true, false,  true,  true, false,  true, false, false, false, false, false, false,
-false,  true,  true, false,  true, false,  true,  true, false,  true,  true, false,  true, false,  true, false,  true,  true, false,
+ true,  true,  true, false,  true, false,  true,  true, false,  true,  true, false,  true, false,  true, false,  true,  true, true,
 false, false, false, false,  true, false, false, false, false, false, false, false, false, false,  true, false, false, false, false
 };
 
-const LevelMap PROGMEM map2 = { {{-4, 7 * 5, 18 * 5 + 4, 5 * 5}, {0, 0, 0, 0}}, 9*5, 8*5, 9*5, 3*5, spriteMap2, dots2  };
+const LevelMap PROGMEM map2 = { {{-4, 7 * 5, 18 * 5 + 4, 5 * 5}, {0, 0, 0, 0}}, 9*5, 8*5, 9*5, 3*5, spriteMap2, dots2, {{0, 1, VIOBYTESTATE_PHASING}, {0, 10, VIOBYTESTATE_PHASING}, {18, 1, VIOBYTESTATE_PHASING}, {18, 10, VIOBYTESTATE_PHASING}}  };
 
 static bool currentDots[228];
+static bool currentStars[4];
 const pLevelMap PROGMEM maps[2] = { &map1, &map2 };
 int currentMap = 0;
 Sprite *tileSpriteMap[228];
@@ -376,6 +388,15 @@ VIOLE,VIOLE,VIOLE,VIOLE,VIOLE,
 ALPHA,VIOLE,VIOLE,VIOLE,ALPHA
 };
 static Sprite s_Viobyte = {5,5, s_ViobyteData};
+
+const uint8_t PROGMEM s_ViobytePhaseData[] {
+ALPHA,WHITE,ALPHA,WHITE,ALPHA,
+WHITE,ALPHA, BLUE,ALPHA,WHITE,
+WHITE, BLUE,WHITE,ALPHA,ALPHA,
+WHITE,ALPHA, BLUE,ALPHA,WHITE,
+ALPHA,WHITE,ALPHA,WHITE,ALPHA
+};
+static Sprite s_ViobytePhase = {5,5, s_ViobytePhaseData};
 
 const uint8_t PROGMEM s_ViobyteLife[] {
 ALPHA,VIOLE,VIOLE,ALPHA,
@@ -422,6 +443,8 @@ static Sprite s_Ghost4 = {5,5, s_Ghost4Data};
 
 static Sprite s_GameOver = {87,10, _image_game_over_data};
 
+const uint8_t PROGMEM starColor[1] = {WHITE};
+
 #define VIOBYTE_PLAYER1 4
 #define VIOBYTE_GHOST1 0
 #define VIOBYTE_GHOST2 1
@@ -433,6 +456,8 @@ SpriteInst sprites[5];
 int score = 0;
 int dotsLeft = 0;
 int lives = 1;
+int viobyteState = VIOBYTESTATE_NORMAL;
+int viobyteDur = 0;
 uint8_t joyDir = 0;
 uint8_t curDir = TAJoystickUp;
 byte leftButton=0;
@@ -448,10 +473,12 @@ int count = 0;
 int avgrefresh = 0;
 uint16_t ghostX;
 uint16_t ghostY;
-Tunnel tunnel[2];
+LevelMap levelMap;
 
 void resetPlayerGhosts()
 {
+  viobyteState = VIOBYTESTATE_NORMAL;
+  viobyteDur = 0;
   ghostX = pgm_read_word(&((pLevelMap)pgm_read_ptr(&maps[currentMap]))->ghostX);
   ghostY = pgm_read_word(&((pLevelMap)pgm_read_ptr(&maps[currentMap]))->ghostY);
   sprites[VIOBYTE_PLAYER1].sprite = &s_Viobyte;
@@ -490,8 +517,15 @@ void reset()
     if (!currentDots[i])
       dotsLeft++;
   }
+  for (int i = 0; i < 4; i++)
+  {
+    if (levelMap.star[i].type == VIOBYTESTATE_NORMAL)
+      currentStars[i] = false;
+    else
+      currentStars[i] = true;
+  }
   memcpy_P(tileSpriteMap, pgm_read_ptr(&((pLevelMap)pgm_read_ptr(&maps[currentMap]))->tileMap), sizeof(tileSpriteMap));
-  memcpy_P(tunnel, ((pLevelMap)pgm_read_ptr(&maps[currentMap])), sizeof(tunnel));
+  memcpy_P(&levelMap, ((pLevelMap)pgm_read_ptr(&maps[currentMap])), sizeof(levelMap));
   resetPlayerGhosts();
 }
 
@@ -558,9 +592,26 @@ void drawDots(const TileMap5pix *tilemap, int line, uint8_t lineBuffer[96])
   }
   if (state != STATE_GAMEOVER)
   {
-    if ((line - tilemap->yPixOffset) % 5 == 2)
+    int yWhere = (line - tilemap->yPixOffset) / 5;
+    int yOffset = (line - tilemap->yPixOffset) % 5;
+    if ((yOffset >= 1) && (yOffset <= 3))
     {
-      int yWhere = (line - tilemap->yPixOffset) / 5;
+      for (int i = 0; i < 4; i++)
+      {
+        if ((currentStars[i] == true) && (levelMap.star[i].type != VIOBYTESTATE_NORMAL) && (levelMap.star[i].y == yWhere))
+        {
+          uint8_t color = pgm_read_byte_near(starColor + (levelMap.star[i].type - 1));
+          if (yOffset == 2)
+          {
+            lineBuffer[levelMap.star[i].x * 5 + 1 + tilemap->xPixOffset] = color;
+            lineBuffer[levelMap.star[i].x * 5 + 3 + tilemap->xPixOffset] = color;
+          }
+          lineBuffer[levelMap.star[i].x * 5 + 2 + tilemap->xPixOffset] = color;
+        }
+      }
+    }
+    if (yOffset == 2)
+    {
       for (int i = 0; i < tilemap->xWidth; i++)
       {
         if (!currentDots[yWhere * tilemap->xWidth + i])
@@ -625,6 +676,15 @@ void loop()
   {
     game_over();
     return;
+  }
+  if (viobyteDur > 0)
+  {
+    viobyteDur--;
+    if (viobyteDur == 0)
+    {
+      viobyteState = VIOBYTESTATE_NORMAL;
+      sprites[VIOBYTE_PLAYER1].sprite = &s_Viobyte;
+    }
   }
   if (joyDir & TAJoystick2Up)
   {
@@ -733,7 +793,7 @@ void loop()
       {
         for (int i = 0; i < 2; ++i)
         {
-          if ((xReal == tunnel[i].posX + 4) && (yReal == tunnel[i].posY))
+          if ((xReal == levelMap.tunnel[i].posX + 4) && (yReal == levelMap.tunnel[i].posY))
           {
             sprites[VIOBYTE_PLAYER1].x--;
             xReal--;
@@ -745,10 +805,10 @@ void loop()
       {
         for (int i = 0; i < 2; ++i)
         {
-          if ((xReal == tunnel[i].posX) && (yReal == tunnel[i].posY))
+          if ((xReal == levelMap.tunnel[i].posX) && (yReal == levelMap.tunnel[i].posY))
           {
-            sprites[VIOBYTE_PLAYER1].x = tunnel[i].desX + s_tileMap.xPixOffset;
-            sprites[VIOBYTE_PLAYER1].y = tunnel[i].desY + s_tileMap.yPixOffset;
+            sprites[VIOBYTE_PLAYER1].x = levelMap.tunnel[i].desX + s_tileMap.xPixOffset;
+            sprites[VIOBYTE_PLAYER1].y = levelMap.tunnel[i].desY + s_tileMap.yPixOffset;
             xWhere = (sprites[VIOBYTE_PLAYER1].x - s_tileMap.xPixOffset) / 5;
             yWhere = (sprites[VIOBYTE_PLAYER1].y - s_tileMap.yPixOffset) / 5;
             yReal = sprites[VIOBYTE_PLAYER1].y - s_tileMap.yPixOffset;
@@ -788,7 +848,7 @@ void loop()
       {
         for (int i = 0; i < 2; ++i)
         {
-          if ((xReal == tunnel[i].desX - 4) && (yReal == tunnel[i].desY))
+          if ((xReal == levelMap.tunnel[i].desX - 4) && (yReal == levelMap.tunnel[i].desY))
           {
             sprites[VIOBYTE_PLAYER1].x++;
             xReal++;
@@ -800,10 +860,10 @@ void loop()
       {
         for (int i = 0; i < 2; ++i)
         {
-          if ((xReal == tunnel[i].desX) && (yReal == tunnel[i].desY))
+          if ((xReal == levelMap.tunnel[i].desX) && (yReal == levelMap.tunnel[i].desY))
           {
-            sprites[VIOBYTE_PLAYER1].x = tunnel[i].posX + s_tileMap.xPixOffset;
-            sprites[VIOBYTE_PLAYER1].y = tunnel[i].posY + s_tileMap.yPixOffset;
+            sprites[VIOBYTE_PLAYER1].x = levelMap.tunnel[i].posX + s_tileMap.xPixOffset;
+            sprites[VIOBYTE_PLAYER1].y = levelMap.tunnel[i].posY + s_tileMap.yPixOffset;
             xWhere = (sprites[VIOBYTE_PLAYER1].x - s_tileMap.xPixOffset) / 5;
             yWhere = (sprites[VIOBYTE_PLAYER1].y - s_tileMap.yPixOffset) / 5;
             yReal = sprites[VIOBYTE_PLAYER1].y - s_tileMap.yPixOffset;
@@ -818,13 +878,7 @@ void loop()
         xReal++;
       }
     }
-    if (currentDots[yWhere * s_tileMap.xWidth + xWhere] == false)
-    {
-      currentDots[yWhere * s_tileMap.xWidth + xWhere] = true;
-      score++;
-      dotsLeft--;
-    }
-    if (curDir == TAJoystickDown)
+    else if (curDir == TAJoystickDown)
     {
       if ((yReal != 55) && ((xReal % 5) == 0))
       {
@@ -870,6 +924,19 @@ void loop()
       currentDots[yWhere * s_tileMap.xWidth + xWhere] = true;
       score++;
       dotsLeft--;
+    }
+    for (int i = 0; i < 4; i++)
+    {
+      if ((currentStars[i] == true) && (levelMap.star[i].y == yWhere) && (levelMap.star[i].x == xWhere))
+      {
+        currentStars[i] = false;
+        if (levelMap.star[i].type == VIOBYTESTATE_PHASING)
+        {
+          viobyteDur = 100;
+          viobyteState = levelMap.star[i].type;
+          sprites[VIOBYTE_PLAYER1].sprite = &s_ViobytePhase;
+        }
+      }
     }
   }
   for (int i = VIOBYTE_GHOST1; i <= VIOBYTE_GHOST4; i++)
@@ -955,7 +1022,7 @@ void loop()
       }
     }
   }
-  if (state != STATE_DIEING)
+  if ((state != STATE_DIEING) && (viobyteState != VIOBYTESTATE_PHASING))
   {
     for (int index = VIOBYTE_GHOST1; index <= VIOBYTE_GHOST4; ++index)
     {
