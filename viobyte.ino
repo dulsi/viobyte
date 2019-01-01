@@ -219,7 +219,7 @@ BLACK,BLACK,BLACK,BLACK,BLACK,
 BLACK,BLACK,BLACK,BLACK,BLACK,
  BLUE,BLACK,BLACK,BLACK, BLUE
 };
-static Sprite s_BM = {5,5, s_BlueWall21Data};
+static Sprite s_BL = {5,5, s_BlueWall21Data};
 
 const uint8_t PROGMEM s_BlueWall22Data[] {
  BLUE,YELLO,YELLO,YELLO, BLUE,
@@ -228,7 +228,7 @@ const uint8_t PROGMEM s_BlueWall22Data[] {
  BLUE,BLACK,BLACK,BLACK, BLUE,
  BLUE, BLUE, BLUE, BLUE, BLUE
 };
-static Sprite s_BN = {5,5, s_BlueWall22Data};
+static Sprite s_BM = {5,5, s_BlueWall22Data};
 
 const uint8_t PROGMEM s_BlueWall23Data[] {
  BLUE,BLACK,BLACK,BLACK, BLUE,
@@ -237,7 +237,7 @@ BLACK,BLACK,BLACK,BLACK, BLUE,
 BLACK,BLACK,BLACK,BLACK, BLUE,
  BLUE, BLUE, BLUE, BLUE, BLUE
 };
-static Sprite s_BO = {5,5, s_BlueWall23Data};
+static Sprite s_BN = {5,5, s_BlueWall23Data};
 
 const uint8_t PROGMEM s_BlueWall24Data[] {
  BLUE, BLUE, BLUE, BLUE, BLUE,
@@ -246,7 +246,7 @@ const uint8_t PROGMEM s_BlueWall24Data[] {
  BLUE,BLACK,BLACK,BLACK,BLACK,
  BLUE,BLACK,BLACK,BLACK, BLUE
 };
-static Sprite s_BP = {5,5, s_BlueWall24Data};
+static Sprite s_BO = {5,5, s_BlueWall24Data};
 
 const uint8_t PROGMEM s_BlueWall25Data[] {
  BLUE, BLUE, BLUE, BLUE, BLUE,
@@ -255,16 +255,16 @@ BLACK,BLACK,BLACK,BLACK, BLUE,
 BLACK,BLACK,BLACK,BLACK, BLUE,
  BLUE,BLACK,BLACK,BLACK, BLUE
 };
-static Sprite s_BQ = {5,5, s_BlueWall25Data};
+static Sprite s_BP = {5,5, s_BlueWall25Data};
 
 const uint8_t PROGMEM s_BlueWall26Data[] {
-BLACK,BLACK,BLACK,BLACK, BLUE,
-BLACK,BLACK,BLACK,BLACK,BLACK,
-BLACK,BLACK,BLACK,BLACK,BLACK,
-BLACK,BLACK,BLACK,BLACK,BLACK,
- BLUE, BLUE, BLUE, BLUE, BLUE
+ BLUE,BLACK,BLACK,BLACK, BLUE,
+ BLUE,BLACK,BLACK,BLACK,BLACK,
+ BLUE,BLACK,BLACK,BLACK,BLACK,
+ BLUE,BLACK,BLACK,BLACK,BLACK,
+ BLUE,BLACK,BLACK,BLACK,BLACK
 };
-static Sprite s_BR = {5,5, s_BlueWall26Data};
+static Sprite s_BQ = {5,5, s_BlueWall26Data};
 
 const uint8_t PROGMEM s_BlueWall27Data[] {
  BLUE,BLACK,BLACK,BLACK, BLUE,
@@ -273,7 +273,43 @@ const uint8_t PROGMEM s_BlueWall27Data[] {
  BLUE,BLACK,BLACK,BLACK,BLACK,
  BLUE,BLACK,BLACK,BLACK, BLUE
 };
-static Sprite s_BS = {5,5, s_BlueWall27Data};
+static Sprite s_BR = {5,5, s_BlueWall27Data};
+
+const uint8_t PROGMEM s_BlueWall28Data[] {
+ BLUE,BLACK,BLACK,BLACK, BLUE,
+BLACK,BLACK,BLACK,BLACK, BLUE,
+BLACK,BLACK,BLACK,BLACK, BLUE,
+BLACK,BLACK,BLACK,BLACK, BLUE,
+ BLUE,BLACK,BLACK,BLACK, BLUE
+};
+static Sprite s_BS = {5,5, s_BlueWall28Data};
+
+const uint8_t PROGMEM s_BlueWall29Data[] {
+ BLUE,BLACK,BLACK,BLACK, BLUE,
+BLACK,BLACK,BLACK,BLACK, BLUE,
+BLACK,BLACK,BLACK,BLACK, BLUE,
+BLACK,BLACK,BLACK,BLACK, BLUE,
+BLACK,BLACK,BLACK,BLACK, BLUE
+};
+static Sprite s_BT = {5,5, s_BlueWall29Data};
+
+const uint8_t PROGMEM s_BlueWall30Data[] {
+BLACK,BLACK,BLACK,BLACK, BLUE,
+BLACK,BLACK,BLACK,BLACK, BLUE,
+BLACK,BLACK,BLACK,BLACK, BLUE,
+BLACK,BLACK,BLACK,BLACK, BLUE,
+ BLUE,BLACK,BLACK,BLACK, BLUE
+};
+static Sprite s_BU = {5,5, s_BlueWall30Data};
+
+const uint8_t PROGMEM s_BlueWall31Data[] {
+ BLUE,BLACK,BLACK,BLACK,BLACK,
+ BLUE,BLACK,BLACK,BLACK,BLACK,
+ BLUE,BLACK,BLACK,BLACK,BLACK,
+ BLUE,BLACK,BLACK,BLACK,BLACK,
+ BLUE,BLACK,BLACK,BLACK, BLUE
+};
+static Sprite s_BV = {5,5, s_BlueWall31Data};
 
 
 struct Tunnel
@@ -312,12 +348,12 @@ const spriteMap PROGMEM spriteMap1[228] =
     0,     0,     0,     0,     0,     0,     0,     0,     0, &s_B5,     0,     0,     0,     0,     0,     0,     0,     0,     0,
     0, &s_B3, &s_B4,     0, &s_B3, &s_B2, &s_B2, &s_B4,     0, &s_B6,     0, &s_B3, &s_B2, &s_B2, &s_B4,     0, &s_B3, &s_B4,     0,
     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-    0, &s_B3, &s_B4,     0, &s_B7, &s_B8,     0, &s_B3, &s_B2, &s_BN, &s_B2, &s_B4,     0, &s_B7, &s_B8,     0, &s_B3, &s_B4,     0,
+    0, &s_B3, &s_B4,     0, &s_B7, &s_B8,     0, &s_B3, &s_B2, &s_BM, &s_B2, &s_B4,     0, &s_B7, &s_B8,     0, &s_B3, &s_B4,     0,
     0,     0,     0,     0, &s_BF, &s_BE,     0,     0,     0, &s_B6,     0,     0,     0, &s_BF, &s_BE,     0,     0,     0,     0,
 &s_B2, &s_B2, &s_B4,     0, &s_BF, &s_BG, &s_B2, &s_B4,     0,     0,     0, &s_B3, &s_B2, &s_BH, &s_BE,     0, &s_B3, &s_B2, &s_B2,
     0,     0,     0,     0, &s_BF, &s_BE,     0,     0,     0, &s_B1,     0,     0,     0, &s_BF, &s_BE,     0,     0,     0,     0,
 &s_B9, &s_B9, &s_B8,     0, &s_BB, &s_BA,     0, &s_BI,     0,     0,     0, &s_BI,     0, &s_BB, &s_BA,     0, &s_B7, &s_B9, &s_B9,
-&s_BD, &s_BD, &s_BA,     0,     0,     0,     0, &s_BC, &s_B2, &s_BM, &s_B2, &s_BO,     0,     0,     0,     0, &s_BB, &s_BD, &s_BD,
+&s_BD, &s_BD, &s_BA,     0,     0,     0,     0, &s_BC, &s_B2, &s_BL, &s_B2, &s_BN,     0,     0,     0,     0, &s_BB, &s_BD, &s_BD,
     0,     0,     0,     0, &s_B7, &s_B8,     0,     0,     0, &s_B5,     0,     0,     0, &s_B7, &s_B8,     0,     0,     0,     0,
     0, &s_B3, &s_B2, &s_B2, &s_BJ, &s_BK, &s_B2, &s_B4,     0, &s_B6,     0, &s_B3, &s_B2, &s_BJ, &s_BK, &s_B2, &s_B2, &s_B4,     0,
     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0
@@ -345,12 +381,12 @@ const spriteMap PROGMEM spriteMap2[228]
     0,     0,     0, &s_B6,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0, &s_B6,     0,     0,     0,
     0, &s_BI,     0,     0,     0, &s_B3, &s_B4,     0, &s_B3, &s_B2, &s_B4,     0, &s_B3, &s_B4,     0,     0,     0, &s_BI,     0,
     0, &s_B6,     0, &s_B3, &s_B4,     0,     0,     0,     0,     0,     0,     0,     0,     0, &s_B3, &s_B4,     0, &s_B6,     0,
-    0,     0,     0,     0,     0,     0, &s_BP, &s_B4,     0, &s_BN,     0, &s_B3, &s_BQ,     0,     0,     0,     0,     0,     0,
-&s_B8,     0, &s_B3, &s_B2, &s_BQ,     0, &s_B5,     0,     0,     0,     0,     0, &s_B5,     0, &s_BI,     0, &s_B3, &s_B2, &s_B2,
+    0,     0,     0,     0,     0,     0, &s_BO, &s_B4,     0, &s_BM,     0, &s_B3, &s_BP,     0,     0,     0,     0,     0,     0,
+&s_B8,     0, &s_B3, &s_B2, &s_BP,     0, &s_B5,     0,     0,     0,     0,     0, &s_B5,     0, &s_BI,     0, &s_B3, &s_B2, &s_B2,
 &s_BE,     0,     0,     0, &s_B6,     0, &s_B6,     0, &s_B3, &s_B2, &s_B4,     0, &s_B6,     0, &s_B5,     0,     0,     0,     0,
-&s_BR, &s_B2, &s_B4,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0, &s_B6,     0, &s_B3, &s_B2, &s_B2,
-    0,     0,     0,     0, &s_BP, &s_B2, &s_B2, &s_B4,     0, &s_B3, &s_B4,     0, &s_BI,     0,     0,     0,     0,     0,     0,
-&s_B2, &s_B2, &s_B4,     0, &s_B6,     0,     0,     0,     0,     0,     0,     0, &s_BS, &s_B2, &s_B2, &s_B4,     0, &s_B1,     0,
+&s_BK, &s_B2, &s_B4,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0, &s_B6,     0, &s_B3, &s_B2, &s_B2,
+    0,     0,     0,     0, &s_BO, &s_B2, &s_B2, &s_B4,     0, &s_B3, &s_B4,     0, &s_BI,     0,     0,     0,     0,     0,     0,
+&s_B2, &s_B2, &s_B4,     0, &s_B6,     0,     0,     0,     0,     0,     0,     0, &s_BR, &s_B2, &s_B2, &s_B4,     0, &s_B1,     0,
     0,     0,     0,     0,     0,     0, &s_B7, &s_B8,     0, &s_B7, &s_B8,     0, &s_B5,     0,     0,     0,     0,     0,     0,
     0, &s_B3, &s_B4,     0, &s_BI,     0, &s_BB, &s_BA,     0, &s_BB, &s_BA,     0, &s_B6,     0, &s_BI,     0, &s_B3, &s_B4,     0,
     0,     0,     0,     0, &s_B5,     0,     0,     0,     0,     0,     0,     0,     0,     0, &s_B5,     0,     0,     0,     0
@@ -373,9 +409,13 @@ false, false, false, false,  true, false, false, false, false, false, false, fal
 
 const LevelMap PROGMEM map2 = { {{-4, 7 * 5, 18 * 5 + 4, 5 * 5}, {0, 0, 0, 0}}, 9*5, 8*5, 9*5, 3*5, spriteMap2, dots2, {{0, 1, VIOBYTESTATE_PHASING}, {0, 10, VIOBYTESTATE_PHASING}, {18, 1, VIOBYTESTATE_PHASING}, {18, 10, VIOBYTESTATE_PHASING}}  };
 
+#include "level3.h"
+
+#define MAPNUM 3
+
 static bool currentDots[228];
 static bool currentStars[4];
-const pLevelMap PROGMEM maps[2] = { &map1, &map2 };
+const pLevelMap PROGMEM maps[MAPNUM] = { &map1, &map2, &map3 };
 int currentMap = 0;
 Sprite *tileSpriteMap[228];
 TileMap5pix s_tileMap = { 19,12,1,4, tileSpriteMap };
@@ -532,6 +572,9 @@ void reset()
 void setup()
 {
   arcadeInit();
+#ifdef TINYSCREENSIM
+  display.setWindowTitle("Viobyte");
+#endif
   display.begin();
   display.setBitDepth(TSBitDepth8);
   display.setBrightness(15);
@@ -880,7 +923,7 @@ void loop()
     }
     else if (curDir == TAJoystickDown)
     {
-      if ((yReal != 55) && ((xReal % 5) == 0))
+      if ((yReal < 55) && ((xReal % 5) == 0))
       {
         if ((yReal % 5) == 0)
         {
@@ -898,10 +941,43 @@ void loop()
             yWhere++;
         }
       }
+      else if (yReal == 55)
+      {
+        for (int i = 0; i < 2; ++i)
+        {
+          if ((yReal == levelMap.tunnel[i].desY - 4) && (xReal == levelMap.tunnel[i].desX))
+          {
+            sprites[VIOBYTE_PLAYER1].y++;
+            yReal++;
+            yWhere++;
+          }
+        }
+      }
+      else if (yReal == 59)
+      {
+        for (int i = 0; i < 2; ++i)
+        {
+          if ((yReal == levelMap.tunnel[i].desY) && (xReal == levelMap.tunnel[i].desX))
+          {
+            sprites[VIOBYTE_PLAYER1].x = levelMap.tunnel[i].posX + s_tileMap.xPixOffset;
+            sprites[VIOBYTE_PLAYER1].y = levelMap.tunnel[i].posY + s_tileMap.yPixOffset;
+            xWhere = (sprites[VIOBYTE_PLAYER1].x - s_tileMap.xPixOffset) / 5;
+            yWhere = (sprites[VIOBYTE_PLAYER1].y - s_tileMap.yPixOffset) / 5;
+            yReal = sprites[VIOBYTE_PLAYER1].y - s_tileMap.yPixOffset;
+            xReal = sprites[VIOBYTE_PLAYER1].x - s_tileMap.xPixOffset;
+            break;
+          }
+        }
+      }
+      else if (yReal < 59)
+      {
+        sprites[VIOBYTE_PLAYER1].y++;
+        yReal++;
+      }
     }
     else if (curDir == TAJoystickUp)
     {
-      if ((yReal != 0) && ((xReal % 5) == 0))
+      if ((yReal > 0) && ((xReal % 5) == 0))
       {
         if ((yReal % 5) == 0)
         {
@@ -917,6 +993,39 @@ void loop()
           sprites[VIOBYTE_PLAYER1].y--;
           yReal--;
         }
+      }
+      else if (yReal == 0)
+      {
+        for (int i = 0; i < 2; ++i)
+        {
+          if ((yReal == levelMap.tunnel[i].posY + 4) && (xReal == levelMap.tunnel[i].posX))
+          {
+            sprites[VIOBYTE_PLAYER1].y--;
+            yReal--;
+            yWhere--;
+          }
+        }
+      }
+      else if (yReal == -4)
+      {
+        for (int i = 0; i < 2; ++i)
+        {
+          if ((yReal == levelMap.tunnel[i].posY) && (xReal == levelMap.tunnel[i].posX))
+          {
+            sprites[VIOBYTE_PLAYER1].x = levelMap.tunnel[i].desX + s_tileMap.xPixOffset;
+            sprites[VIOBYTE_PLAYER1].y = levelMap.tunnel[i].desY + s_tileMap.yPixOffset;
+            xWhere = (sprites[VIOBYTE_PLAYER1].x - s_tileMap.xPixOffset) / 5;
+            yWhere = (sprites[VIOBYTE_PLAYER1].y - s_tileMap.yPixOffset) / 5;
+            yReal = sprites[VIOBYTE_PLAYER1].y - s_tileMap.yPixOffset;
+            xReal = sprites[VIOBYTE_PLAYER1].x - s_tileMap.xPixOffset;
+            break;
+          }
+        }
+      }
+      else if (yReal < 0)
+      {
+        yReal--;
+        sprites[VIOBYTE_PLAYER1].y--;
       }
     }
     if (currentDots[yWhere * s_tileMap.xWidth + xWhere] == false)
@@ -1080,10 +1189,7 @@ void loop()
   }
   if (dotsLeft == 0)
   {
-    if (currentMap == 0)
-      currentMap = 1;
-    else
-      currentMap = 0;
+    currentMap = (currentMap + 1) % MAPNUM;
     reset();
   }
 }
